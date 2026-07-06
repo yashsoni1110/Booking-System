@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Mechanic Booking System — A professional digital platform for managing mechanic service bookings, replacing manual paper-based workflows with a structured, reliable CRUD interface." />
+  <meta name="theme-color" content="#0a0a0a" />
+  <title>MechBook Pro — Mechanic Booking System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <!-- Skip Navigation for Accessibility -->
+  <a href="#main-content" class="skip-link" aria-label="Skip to main content">Skip to main content</a>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" role="complementary" aria-label="Application Navigation">
+    <div class="sidebar-brand" aria-label="MechBook Pro Brand">
+      <div class="brand-icon" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M14 2C7.373 2 2 7.373 2 14s5.373 12 12 12 12-5.373 12-12S20.627 2 14 2zm0 2c5.523 0 10 4.477 10 10S19.523 24 14 24 4 19.523 4 14 8.477 4 14 4zm0 3a7 7 0 100 14A7 7 0 0014 7zm0 2a5 5 0 110 10A5 5 0 0114 9zm-1 2v3.586l-1.707 1.707 1.414 1.414L14.707 16H17v-2h-2v-2.414L13 13z"
+            fill="currentColor" />
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">MechBook</span>
+        <span class="brand-tag">Pro</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" role="navigation" aria-label="Main Navigation">
+      <ul class="nav-list" role="list">
+        <li role="listitem">
+          <button class="nav-item active" id="nav-dashboard" onclick="navigateTo('dashboard')" aria-current="page"
+            aria-label="Dashboard overview">
+            <svg class="nav-icon" aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                d="M3 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM9 4a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1h-2a1 1 0 01-1-1V4zM15 9a1 1 0 011-1h1a1 1 0 011 1v7a1 1 0 01-1 1h-1a1 1 0 01-1-1V9z" />
+            </svg>
+            <span>Dashboard</span>
+          </button>
+        </li>
+        <li role="listitem">
+          <button class="nav-item" id="nav-bookings" onclick="navigateTo('bookings')" aria-label="Manage all bookings">
+            <svg class="nav-icon" aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                clip-rule="evenodd" />
+            </svg>
+            <span>Bookings</span>
+            <span class="nav-badge" id="nav-badge-bookings" aria-label="booking count">0</span>
+          </button>
+        </li>
+        <li role="listitem">
+          <button class="nav-item" id="nav-mechanics" onclick="navigateTo('mechanics')" aria-label="Manage mechanics">
+            <svg class="nav-icon" aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                clip-rule="evenodd" />
+            </svg>
+            <span>Mechanics</span>
+            <span class="nav-badge" id="nav-badge-mechanics" aria-label="mechanic count">0</span>
+          </button>
+        </li>
+        <li role="listitem">
+          <button class="nav-item" id="nav-customers" onclick="navigateTo('customers')" aria-label="Manage customers">
+            <svg class="nav-icon" aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+            </svg>
+            <span>Customers</span>
+            <span class="nav-badge" id="nav-badge-customers" aria-label="customer count">0</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="system-status" role="status" aria-live="polite" aria-label="System connectivity status">
+        <div class="status-dot" id="status-dot" aria-hidden="true"></div>
+        <span id="status-text">System Online</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Layout -->
+  <div class="main-layout">
+
+    <!-- Top Header -->
+    <header class="top-header" role="banner">
+      <div class="header-left">
+        <h1 class="page-title" id="page-heading">Dashboard</h1>
+        <p class="page-subtitle" id="page-subtitle">Overview of your workshop operations</p>
+      </div>
+      <div class="header-right">
+        <div class="search-container" role="search" aria-label="Global search">
+          <label for="global-search" class="sr-only">Search bookings, mechanics, or customers</label>
+          <svg class="search-icon" aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clip-rule="evenodd" />
+          </svg>
+          <input type="search" id="global-search" class="search-input" placeholder="Search anything…"
+            aria-label="Search bookings, mechanics, or customers" autocomplete="off" />
+        </div>
+        <button class="btn btn-primary" id="header-create-btn" onclick="openCreateModal()"
+          aria-label="Create new booking">
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+            <path fill-rule="evenodd"
+              d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+              clip-rule="evenodd" />
+          </svg>
+          New Booking
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content" tabindex="-1">
+
+      <!-- Dashboard View -->
+      <section id="view-dashboard" class="view active" aria-labelledby="page-heading">
+
+        <div class="stats-grid" role="list" aria-label="Key performance metrics">
+
+          <article class="stat-card" role="listitem" aria-label="Total bookings statistic">
+            <div class="stat-card-header">
+              <span class="stat-label">Total Bookings</span>
+              <div class="stat-icon-wrap stat-blue" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                    clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+            <p class="stat-value" id="stat-total-bookings" aria-live="polite">0</p>
+            <p class="stat-change" id="stat-bookings-change">All time</p>
+          </article>
+
+          <article class="stat-card" role="listitem" aria-label="Pending bookings statistic">
+            <div class="stat-card-header">
+              <span class="stat-label">Pending</span>
+              <div class="stat-icon-wrap stat-amber" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                    clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+            <p class="stat-value" id="stat-pending" aria-live="polite">0</p>
+            <p class="stat-change">Awaiting service</p>
+          </article>
+
+          <article class="stat-card" role="listitem" aria-label="In-progress bookings statistic">
+            <div class="stat-card-header">
+              <span class="stat-label">In Progress</span>
+              <div class="stat-icon-wrap stat-green" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                    clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+            <p class="stat-value" id="stat-in-progress" aria-live="polite">0</p>
+            <p class="stat-change">Currently active</p>
+          </article>
+
+          <article class="stat-card" role="listitem" aria-label="Total mechanics registered">
+            <div class="stat-card-header">
+              <span class="stat-label">Mechanics</span>
+              <div class="stat-icon-wrap stat-purple" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                    clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+            <p class="stat-value" id="stat-mechanics" aria-live="polite">0</p>
+            <p class="stat-change">Floor staff</p>
+          </article>
+
+        </div>
+
+        <!-- Recent Activity Table -->
+        <section class="card" aria-labelledby="recent-bookings-heading">
+          <div class="card-header">
+            <h2 id="recent-bookings-heading" class="card-title">Recent Bookings</h2>
+            <button class="btn btn-ghost btn-sm" onclick="navigateTo('bookings')" aria-label="View all bookings">View
+              All →</button>
+          </div>
+          <div class="table-wrapper" role="region" aria-label="Recent bookings table" tabindex="0">
+            <table class="data-table" aria-label="Recent bookings">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Vehicle</th>
+                  <th scope="col">Service</th>
+                  <th scope="col">Mechanic</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Date</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-recent-tbody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+          <div id="dashboard-empty-state" class="empty-state" aria-live="polite" hidden>
+            <div class="empty-icon" aria-hidden="true">📋</div>
+            <h3>No bookings yet</h3>
+            <p>Create your first booking to get started.</p>
+            <button class="btn btn-primary" onclick="openCreateModal()" aria-label="Create your first booking">Create
+              Booking</button>
+          </div>
+        </section>
+
+      </section>
+
+      <!-- Bookings View -->
+      <section id="view-bookings" class="view" aria-labelledby="page-heading" hidden>
+
+        <div class="view-toolbar" role="toolbar" aria-label="Booking management tools">
+          <div class="toolbar-left">
+            <label for="booking-search" class="sr-only">Search bookings</label>
+            <div class="field-group">
+              <svg class="input-icon" aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  clip-rule="evenodd" />
+              </svg>
+              <input type="search" id="booking-search" class="input-with-icon"
+                placeholder="Search by customer, vehicle, mechanic…" aria-label="Search bookings" />
+            </div>
+            <label for="status-filter" class="sr-only">Filter by status</label>
+            <select id="status-filter" class="select-input" aria-label="Filter bookings by status"
+              onchange="filterBookings()">
+              <option value="">All Statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="toolbar-right">
+            <button class="btn btn-ghost" onclick="exportBookingsToCSV()" aria-label="Export bookings to CSV">
+              <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              Export CSV
+            </button>
+            <button class="btn btn-primary" onclick="openCreateModal()" aria-label="Create new booking">
+              <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                <path fill-rule="evenodd"
+                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                  clip-rule="evenodd" />
+              </svg>
+              New Booking
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div id="booking-loader" class="loader-container" role="status" aria-live="polite"
+            aria-label="Loading bookings" hidden>
+            <div class="spinner" aria-hidden="true"></div>
+            <p>Loading bookings…</p>
+          </div>
+          <div class="table-wrapper" role="region" aria-label="Bookings data table" tabindex="0">
+            <table class="data-table" id="bookings-table" aria-label="All bookings">
+              <thead>
+                <tr>
+                  <th scope="col" aria-sort="none">
+                    <button class="sort-btn" onclick="sortTable('bookings','id')" aria-label="Sort by ID">ID</button>
+                  </th>
+                  <th scope="col">
+                    <button class="sort-btn" onclick="sortTable('bookings','customerName')"
+                      aria-label="Sort by customer name">Customer</button>
+                  </th>
+                  <th scope="col">Vehicle</th>
+                  <th scope="col">Service Type</th>
+                  <th scope="col">
+                    <button class="sort-btn" onclick="sortTable('bookings','mechanicId')"
+                      aria-label="Sort by mechanic">Mechanic</button>
+                  </th>
+                  <th scope="col">
+                    <button class="sort-btn" onclick="sortTable('bookings','estimate')"
+                      aria-label="Sort by estimate">Estimate</button>
+                  </th>
+                  <th scope="col">Status</th>
+                  <th scope="col">
+                    <button class="sort-btn" onclick="sortTable('bookings','date')"
+                      aria-label="Sort by date">Date</button>
+                  </th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bookings-tbody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+          <div id="bookings-empty-state" class="empty-state" aria-live="polite" hidden>
+            <div class="empty-icon" aria-hidden="true">🔍</div>
+            <h3>No bookings found</h3>
+            <p>Try adjusting your search or filters, or create a new booking.</p>
+            <button class="btn btn-primary" onclick="openCreateModal()" aria-label="Create new booking">New
+              Booking</button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Mechanics View -->
+      <section id="view-mechanics" class="view" aria-labelledby="page-heading" hidden>
+
+        <div class="view-toolbar" role="toolbar" aria-label="Mechanic management tools">
+          <div class="toolbar-left">
+            <label for="mechanic-search" class="sr-only">Search mechanics</label>
+            <div class="field-group">
+              <svg class="input-icon" aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  clip-rule="evenodd" />
+              </svg>
+              <input type="search" id="mechanic-search" class="input-with-icon" placeholder="Search mechanics…"
+                aria-label="Search mechanics" oninput="filterMechanics()" />
+            </div>
+          </div>
+          <div class="toolbar-right">
+            <button class="btn btn-primary" onclick="openMechanicModal()" aria-label="Add a new mechanic">
+              <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                <path fill-rule="evenodd"
+                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                  clip-rule="evenodd" />
+              </svg>
+              Add Mechanic
+            </button>
+          </div>
+        </div>
+
+        <div class="cards-grid" id="mechanics-grid" aria-label="Mechanics list" role="list">
+          <!-- Populated by JS -->
+        </div>
+        <div id="mechanics-empty-state" class="empty-state" aria-live="polite" hidden>
+          <div class="empty-icon" aria-hidden="true">🔧</div>
+          <h3>No mechanics registered</h3>
+          <p>Add your first mechanic to assign bookings.</p>
+          <button class="btn btn-primary" onclick="openMechanicModal()" aria-label="Add your first mechanic">Add
+            Mechanic</button>
+        </div>
+
+      </section>
+
+      <!-- Customers View -->
+      <section id="view-customers" class="view" aria-labelledby="page-heading" hidden>
+
+        <div class="view-toolbar" role="toolbar" aria-label="Customer management tools">
+          <div class="toolbar-left">
+            <label for="customer-search" class="sr-only">Search customers</label>
+            <div class="field-group">
+              <svg class="input-icon" aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  clip-rule="evenodd" />
+              </svg>
+              <input type="search" id="customer-search" class="input-with-icon" placeholder="Search customers…"
+                aria-label="Search customers" oninput="filterCustomers()" />
+            </div>
+          </div>
+          <div class="toolbar-right">
+            <button class="btn btn-primary" onclick="openCustomerModal()" aria-label="Add a new customer">
+              <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                <path fill-rule="evenodd"
+                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                  clip-rule="evenodd" />
+              </svg>
+              Add Customer
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-wrapper" role="region" aria-label="Customers data table" tabindex="0">
+            <table class="data-table" aria-label="All customers">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Vehicles</th>
+                  <th scope="col">Total Bookings</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="customers-tbody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+          <div id="customers-empty-state" class="empty-state" aria-live="polite" hidden>
+            <div class="empty-icon" aria-hidden="true">👤</div>
+            <h3>No customers found</h3>
+            <p>Add customers to begin managing their bookings.</p>
+            <button class="btn btn-primary" onclick="openCustomerModal()" aria-label="Add first customer">Add
+              Customer</button>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-container" class="toast-container" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- Booking Modal -->
+  <div id="booking-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title"
+    hidden>
+    <div class="modal" role="document">
+      <div class="modal-header">
+        <h2 id="booking-modal-title" class="modal-title">New Booking</h2>
+        <button class="modal-close" onclick="closeModal('booking-modal')" aria-label="Close booking form">
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
+            <path fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="booking-form" novalidate onsubmit="handleBookingSubmit(event)" aria-label="Booking details form">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="b-customer">
+                Customer <span class="required-star" aria-label="required">*</span>
+              </label>
+              <select id="b-customer" name="customerId" class="form-input" required aria-required="true"
+                aria-describedby="b-customer-err">
+                <option value="">— Select Customer —</option>
+              </select>
+              <span id="b-customer-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="b-mechanic">
+                Assigned Mechanic <span class="required-star" aria-label="required">*</span>
+              </label>
+              <select id="b-mechanic" name="mechanicId" class="form-input" required aria-required="true"
+                aria-describedby="b-mechanic-err">
+                <option value="">— Select Mechanic —</option>
+              </select>
+              <span id="b-mechanic-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="b-vehicle-make">
+                Vehicle Make <span class="required-star" aria-label="required">*</span>
+              </label>
+              <input type="text" id="b-vehicle-make" name="vehicleMake" class="form-input" placeholder="e.g. Toyota"
+                required aria-required="true" aria-describedby="b-vehicle-make-err" maxlength="50" />
+              <span id="b-vehicle-make-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="b-vehicle-model">
+                Vehicle Model <span class="required-star" aria-label="required">*</span>
+              </label>
+              <input type="text" id="b-vehicle-model" name="vehicleModel" class="form-input"
+                placeholder="e.g. Camry 2020" required aria-required="true" aria-describedby="b-vehicle-model-err"
+                maxlength="60" />
+              <span id="b-vehicle-model-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="b-plate">
+                License Plate <span class="required-star" aria-label="required">*</span>
+              </label>
+              <input type="text" id="b-plate" name="plate" class="form-input" placeholder="e.g. MH12AB1234" required
+                aria-required="true" aria-describedby="b-plate-err" maxlength="20" style="text-transform:uppercase;" />
+              <span id="b-plate-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="b-service-type">
+                Service Type <span class="required-star" aria-label="required">*</span>
+              </label>
+              <select id="b-service-type" name="serviceType" class="form-input" required aria-required="true"
+                aria-describedby="b-service-type-err">
+                <option value="">— Select Service —</option>
+                <option>Oil Change</option>
+                <option>Tyre Rotation</option>
+                <option>Brake Inspection</option>
+                <option>Engine Diagnostic</option>
+                <option>AC Service</option>
+                <option>Battery Replacement</option>
+                <option>Full Service</option>
+                <option>Wheel Alignment</option>
+                <option>Suspension Check</option>
+                <option>Other</option>
+              </select>
+              <span id="b-service-type-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="b-date">
+                Booking Date <span class="required-star" aria-label="required">*</span>
+              </label>
+              <input type="date" id="b-date" name="date" class="form-input" required aria-required="true"
+                aria-describedby="b-date-err" />
+              <span id="b-date-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="b-status">Status</label>
+              <select id="b-status" name="status" class="form-input" aria-label="Booking status">
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="b-notes">Notes / Description</label>
+            <textarea id="b-notes" name="notes" class="form-input form-textarea"
+              placeholder="Describe the issue or additional notes…" maxlength="500"
+              aria-describedby="b-notes-hint"></textarea>
+            <span id="b-notes-hint" class="field-hint">Maximum 500 characters</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="b-estimate">
+              Cost Estimate (₹) <span class="required-star" aria-label="required">*</span>
+            </label>
+            <input type="number" id="b-estimate" name="estimate" class="form-input" placeholder="e.g. 2500" min="0"
+              max="999999" step="50" required aria-required="true" aria-describedby="b-estimate-err" />
+            <span id="b-estimate-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+          </div>
+
+          <input type="hidden" id="b-edit-id" value="" />
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" type="button" onclick="closeModal('booking-modal')"
+          aria-label="Cancel booking form">Cancel</button>
+        <button class="btn btn-primary" type="submit" form="booking-form" id="booking-submit-btn"
+          aria-label="Save booking">
+          <span class="btn-label">Save Booking</span>
+          <span class="btn-spinner spinner-sm" aria-hidden="true" hidden></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mechanic Modal -->
+  <div id="mechanic-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="mechanic-modal-title"
+    hidden>
+    <div class="modal" role="document">
+      <div class="modal-header">
+        <h2 id="mechanic-modal-title" class="modal-title">Add Mechanic</h2>
+        <button class="modal-close" onclick="closeModal('mechanic-modal')" aria-label="Close mechanic form">
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
+            <path fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="mechanic-form" novalidate onsubmit="handleMechanicSubmit(event)" aria-label="Mechanic details form">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="m-name">
+                Full Name <span class="required-star" aria-label="required">*</span>
+              </label>
+              <input type="text" id="m-name" name="name" class="form-input" placeholder="e.g. Rajesh Kumar" required
+                aria-required="true" aria-describedby="m-name-err" maxlength="80" />
+              <span id="m-name-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="m-phone">
+                Phone <span class="required-star" aria-label="required">*</span>
+              </label>
+              <input type="tel" id="m-phone" name="phone" class="form-input" placeholder="e.g. 9876543210" required
+                aria-required="true" aria-describedby="m-phone-err" maxlength="15" />
+              <span id="m-phone-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="m-specialty">
+                Specialty <span class="required-star" aria-label="required">*</span>
+              </label>
+              <select id="m-specialty" name="specialty" class="form-input" required aria-required="true"
+                aria-describedby="m-specialty-err">
+                <option value="">— Select Specialty —</option>
+                <option>Engine & Transmission</option>
+                <option>Electrical Systems</option>
+                <option>Brakes & Suspension</option>
+                <option>AC & Cooling</option>
+                <option>Bodywork & Paint</option>
+                <option>General Service</option>
+                <option>Diagnostics</option>
+              </select>
+              <span id="m-specialty-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="m-experience">
+                Experience (Years) <span class="required-star" aria-label="required">*</span>
+              </label>
+              <input type="number" id="m-experience" name="experience" class="form-input" placeholder="e.g. 5" min="0"
+                max="60" required aria-required="true" aria-describedby="m-experience-err" />
+              <span id="m-experience-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="m-availability">Availability</label>
+            <select id="m-availability" name="availability" class="form-input"
+              aria-label="Mechanic availability status">
+              <option value="Available">Available</option>
+              <option value="Busy">Busy</option>
+              <option value="On Leave">On Leave</option>
+            </select>
+          </div>
+
+          <input type="hidden" id="m-edit-id" value="" />
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" type="button" onclick="closeModal('mechanic-modal')"
+          aria-label="Cancel mechanic form">Cancel</button>
+        <button class="btn btn-primary" type="submit" form="mechanic-form" id="mechanic-submit-btn"
+          aria-label="Save mechanic">Save Mechanic</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer Modal -->
+  <div id="customer-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="customer-modal-title"
+    hidden>
+    <div class="modal" role="document">
+      <div class="modal-header">
+        <h2 id="customer-modal-title" class="modal-title">Add Customer</h2>
+        <button class="modal-close" onclick="closeModal('customer-modal')" aria-label="Close customer form">
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
+            <path fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="customer-form" novalidate onsubmit="handleCustomerSubmit(event)" aria-label="Customer details form">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="c-name">
+                Full Name <span class="required-star" aria-label="required">*</span>
+              </label>
+              <input type="text" id="c-name" name="name" class="form-input" placeholder="e.g. Priya Sharma" required
+                aria-required="true" aria-describedby="c-name-err" maxlength="80" />
+              <span id="c-name-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="c-phone">
+                Phone <span class="required-star" aria-label="required">*</span>
+              </label>
+              <input type="tel" id="c-phone" name="phone" class="form-input" placeholder="e.g. 9876543210" required
+                aria-required="true" aria-describedby="c-phone-err" maxlength="15" />
+              <span id="c-phone-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="c-email">Email Address</label>
+              <input type="email" id="c-email" name="email" class="form-input" placeholder="e.g. priya@example.com"
+                aria-describedby="c-email-err" maxlength="100" />
+              <span id="c-email-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="c-vehicles">
+                Vehicles (comma-separated) <span class="required-star" aria-label="required">*</span>
+              </label>
+              <input type="text" id="c-vehicles" name="vehicles" class="form-input"
+                placeholder="e.g. Toyota Camry, Honda City" required aria-required="true"
+                aria-describedby="c-vehicles-err" maxlength="200" />
+              <span id="c-vehicles-err" class="field-error" role="alert" aria-live="polite" hidden></span>
+            </div>
+          </div>
+
+          <input type="hidden" id="c-edit-id" value="" />
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" type="button" onclick="closeModal('customer-modal')"
+          aria-label="Cancel customer form">Cancel</button>
+        <button class="btn btn-primary" type="submit" form="customer-form" id="customer-submit-btn"
+          aria-label="Save customer">Save Customer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Delete Dialog -->
+  <div id="confirm-dialog" class="modal-backdrop" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title"
+    aria-describedby="confirm-desc" hidden>
+    <div class="modal modal-sm" role="document">
+      <div class="modal-header">
+        <h2 id="confirm-title" class="modal-title">Confirm Deletion</h2>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-desc" class="confirm-message">Are you sure you want to delete this record? This action cannot be
+          undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('confirm-dialog')"
+          aria-label="Cancel deletion">Cancel</button>
+        <button class="btn btn-danger" id="confirm-delete-btn" aria-label="Confirm delete">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
