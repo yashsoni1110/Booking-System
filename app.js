@@ -52,10 +52,7 @@ function simulateAsync(minMs = 400, maxMs = 900) {
   return new Promise(resolve => setTimeout(resolve, delay));
 }
 
-function analyticsEvent(action, meta = {}) {
-  const payload = { action, timestamp: new Date().toISOString(), ...meta };
-  console.log('[Analytics] User interacted with Feature Complete CRUD', payload);
-}
+
 
 // Data Store (Localstorage-Backed In-Memory Store)
 
@@ -367,7 +364,6 @@ function statusSelect(id, status) {
 
 function updateBookingStatus(id, status) {
   Store.updateBooking(id, { status });
-  analyticsEvent('booking_status_inline', { id, status });
   Toast.show('success', 'Status Updated', `Booking ${id} is now ${status}.`);
   updateBadges();
   renderBookings();
@@ -517,7 +513,6 @@ function exportBookingsToCSV() {
   link.click();
   document.body.removeChild(link);
   
-  analyticsEvent('bookings_exported_csv', { count: bookings.length });
   Toast.show('success', 'Export Complete', `Successfully exported ${bookings.length} bookings to CSV.`);
 }
 
@@ -610,11 +605,9 @@ async function handleBookingSubmit(e) {
 
   if (editId) {
     Store.updateBooking(editId, data);
-    analyticsEvent('booking_updated', { id: editId, serviceType: data.serviceType });
     Toast.show('success', 'Booking Updated', `Booking ${editId} has been updated successfully.`);
   } else {
     const record = Store.addBooking(data);
-    analyticsEvent('booking_created', { id: record.id, serviceType: data.serviceType });
     Toast.show('success', 'Booking Created', `New booking ${record.id} has been created.`);
   }
 
@@ -803,11 +796,9 @@ async function handleMechanicSubmit(e) {
 
   if (editId) {
     Store.updateMechanic(editId, data);
-    analyticsEvent('mechanic_updated', { id: editId, name: data.name });
     Toast.show('success', 'Mechanic Updated', `${data.name}'s profile has been updated.`);
   } else {
     const record = Store.addMechanic(data);
-    analyticsEvent('mechanic_created', { id: record.id, name: data.name });
     Toast.show('success', 'Mechanic Added', `${data.name} has been added to the roster.`);
   }
 
@@ -953,11 +944,9 @@ async function handleCustomerSubmit(e) {
 
   if (editId) {
     Store.updateCustomer(editId, data);
-    analyticsEvent('customer_updated', { id: editId, name: data.name });
     Toast.show('success', 'Customer Updated', `${data.name}'s profile has been updated.`);
   } else {
     const record = Store.addCustomer(data);
-    analyticsEvent('customer_created', { id: record.id, name: data.name });
     Toast.show('success', 'Customer Added', `${data.name} has been added to the system.`);
   }
 
@@ -1148,7 +1137,6 @@ document.getElementById('confirm-delete-btn').addEventListener('click', async ()
   closeModal('confirm-dialog');
 
   if (success) {
-    analyticsEvent(`${entity}_deleted`, { id });
     const labels = { booking: 'Booking', mechanic: 'Mechanic', customer: 'Customer' };
     
     // Toast with Undo button (persists a bit longer to allow clicking)
@@ -1166,7 +1154,6 @@ document.getElementById('confirm-delete-btn').addEventListener('click', async ()
 
 const debouncedGlobalSearch = debounce((query) => {
   if (!query.trim()) return;
-  analyticsEvent('global_search', { query });
 
   const q = query.toLowerCase().trim();
   const results = {
@@ -1253,7 +1240,6 @@ function init() {
   });
 
   console.log('%c[MechBook Pro] System initialized. ENG-159184 — Mechanic Booking System CRUD.', 'color:#a78bfa;font-weight:bold;');
-  analyticsEvent('app_initialized', { version: '1.0.0', timestamp: new Date().toISOString() });
 }
 
 // Kick off on DOM ready
